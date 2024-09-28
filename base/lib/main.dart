@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'home.dart'; // Import home.dart
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Trackle',
+      title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 51, 96, 101)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 51, 96, 101)),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _startLogoFadeTimer();
   }
 
-  // Starts the timer to fade the logo
+  // Starts the timer to fade the logo and redirect
   void _startLogoFadeTimer() {
     // After 3 seconds, start fading the logo
     Timer(const Duration(seconds: 3), () {
@@ -48,19 +48,24 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    // After 5 seconds, hide the logo completely
+    // After 5 seconds, hide the logo completely and navigate to HomePage
     Timer(const Duration(seconds: 5), () {
       setState(() {
         _logoVisible = false;
       });
+
+      // Redirect to HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()), // Navigate to HomePage from home.dart
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(
-          255, 70, 108, 105), // Background color changed to light blue
+      backgroundColor: const Color.fromARGB(255, 51, 96, 101), // Background color changed to light blue
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,12 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_logoVisible)
               AnimatedOpacity(
                 opacity: _opacity,
-                duration: const Duration(
-                    seconds: 2), // Duration for the fade-out effect
+                duration: const Duration(seconds: 2), // Duration for the fade-out effect
                 child: Image.asset(
-                  'images/logo_word_motto-curved.png', // Add your logo to the images folder
-                  width: 300,
-                  height: 300,
+                  'images/logo_word_motto-curved.png', // Your logo path
+                  width: 300, // Increased the width by a factor of 3
+                  height: 300, // Increased the height by a factor of 3
                 ),
               ),
           ],
