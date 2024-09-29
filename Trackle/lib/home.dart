@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // for encoding the query as JSON
 
+import 'package:flutter/services.dart';
+
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -13,9 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // Subpages content for each tab
   static final List<Widget> _widgetOptions = <Widget>[
     AIPromptPage(),
-    Center(child: Text('Control')), // switches
-    Center(child: Text('Log')), // log
-    Center(child: Text('Optimize')), // energy
+    ControlPage(), // Control page with toggles
+    OptimizePage(), // energy
   ];
 
   void _onItemTapped(int index) {
@@ -46,10 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Controls', // Switches
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart), // Log Icon
-            label: 'Log', // Log
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.battery_charging_full), // Energy Icon
             label: 'Optimize', // Energy
           ),
@@ -72,7 +70,7 @@ class _AIPromptPageState extends State<AIPromptPage> {
   final TextEditingController _controller = TextEditingController();
   String _response = 'Response will generate here.';
   String apiKey =
-      'sk-YFJR-OCH9s3rKdxHz07lyK6jIl5cot9xsNNF8wwzCTT3BlbkFJp5DfHpsK7umzWZVrAV5hqvYNmmkpFjRkl0xCoWurEA';
+      'sk-TE-v0368KVMrj1Ind1xuYIXmHBUNW4i5ZgLo5XhuxLT3BlbkFJyuFDfmI-TA5e-uCT3blwcrZISJVDHQcRMH39Xy09oA';
 
   // This function sends a query to the OpenAI GPT API and fetches the response
   Future<void> _sendQuery(String query) async {
@@ -126,7 +124,6 @@ class _AIPromptPageState extends State<AIPromptPage> {
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
-        // Enable scrolling
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
@@ -141,7 +138,6 @@ class _AIPromptPageState extends State<AIPromptPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                // Instructions Text
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: Text.rich(
@@ -170,7 +166,6 @@ class _AIPromptPageState extends State<AIPromptPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // Message Input Field
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: TextField(
@@ -188,7 +183,6 @@ class _AIPromptPageState extends State<AIPromptPage> {
                     ),
                   ),
                 ),
-                // Send Button
                 ElevatedButton(
                   onPressed: () {
                     String query = _controller.text;
@@ -197,13 +191,12 @@ class _AIPromptPageState extends State<AIPromptPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent
-                        .withOpacity(0.7), // Mellow, less opaque color
+                    backgroundColor: Colors.blueAccent.withOpacity(0.7),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    elevation: 5, // Add elevation for a more modern button look
+                    elevation: 5,
                   ),
                   child: Text(
                     'Send',
@@ -211,7 +204,6 @@ class _AIPromptPageState extends State<AIPromptPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // AI Response Area
                 Container(
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -226,7 +218,7 @@ class _AIPromptPageState extends State<AIPromptPage> {
                         color: Colors.grey.withOpacity(0.2),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: Offset(0, 3), // changes position of shadow
+                        offset: Offset(0, 3),
                       ),
                     ],
                   ),
@@ -237,14 +229,12 @@ class _AIPromptPageState extends State<AIPromptPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Footer Text
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Powered by ',
-                      style:
-                          TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                      style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                     ),
                     Image.asset(
                       'images/intel_ai_logo.jpg',
@@ -258,5 +248,236 @@ class _AIPromptPageState extends State<AIPromptPage> {
         ),
       ),
     );
+  }
+}
+
+class ControlPage extends StatefulWidget {
+  @override
+  _ControlPageState createState() => _ControlPageState();
+}
+
+class _ControlPageState extends State<ControlPage> {
+  final List<Map<String, dynamic>> _apps = [
+    {'name': 'Facebook', 'isOn': false},
+    {'name': 'Google', 'isOn': false},
+    {'name': 'Instagram', 'isOn': false},
+    {'name': 'WhatsApp', 'isOn': false},
+    {'name': 'Twitter', 'isOn': false},
+    {'name': 'LinkedIn', 'isOn': false},
+    {'name': 'Snapchat', 'isOn': false},
+    {'name': 'TikTok', 'isOn': false},
+    {'name': 'Pinterest', 'isOn': false},
+    {'name': 'Reddit', 'isOn': false},
+    {'name': 'Tumblr', 'isOn': false},
+    {'name': 'YouTube', 'isOn': false},
+    {'name': 'Spotify', 'isOn': false},
+    {'name': 'Netflix', 'isOn': false},
+    {'name': 'Twitch', 'isOn': false},
+    {'name': 'Amazon', 'isOn': false},
+    {'name': 'eBay', 'isOn': false},
+    {'name': 'PayPal', 'isOn': false},
+    {'name': 'Uber', 'isOn': false},
+    {'name': 'Lyft', 'isOn': false},
+    {'name': 'Airbnb', 'isOn': false},
+    {'name': 'Booking', 'isOn': false},
+    {'name': 'Expedia', 'isOn': false},
+    {'name': 'TripAdvisor', 'isOn': false},
+    {'name': 'Yelp', 'isOn': false},
+    {'name': 'Zomato', 'isOn': false},
+    {'name': 'Swiggy', 'isOn': false},
+    {'name': 'Zomato', 'isOn': false},
+    {'name': 'Ola', 'isOn': false},
+    {'name': 'Uber Eats', 'isOn': false},
+    {'name': 'DoorDash', 'isOn': false},
+    {'name': 'Grubhub', 'isOn': false},
+    {'name': 'Postmates', 'isOn': false},
+    {'name': 'Instacart', 'isOn': false},
+    {'name': 'Walmart', 'isOn': false},
+    {'name': 'Target', 'isOn': false},
+    {'name': 'Best Buy', 'isOn': false},
+    {'name': 'Home Depot', 'isOn': false},
+    {'name': 'Lowe\'s', 'isOn': false},
+    {'name': 'IKEA', 'isOn': false},
+    {'name': 'Costco', 'isOn': false},
+    {'name': 'Safeway', 'isOn': false},
+    {'name': 'Kroger', 'isOn': false},
+    {'name': 'Whole Foods', 'isOn': false},
+    {'name': 'Starbucks', 'isOn': false},
+    {'name': 'McDonald\'s', 'isOn': false},
+    {'name': 'Burger King', 'isOn': false},
+    {'name': 'Subway', 'isOn': false},
+    {'name': 'Pizza Hut', 'isOn': false},
+    {'name': 'Domino\'s', 'isOn': false},
+    {'name': 'Papa John\'s', 'isOn': false},
+    {'name': 'Chipotle', 'isOn': false},
+    {'name': 'Taco Bell', 'isOn': false},
+    {'name': 'KFC', 'isOn': false},
+    {'name': 'Wendy\'s', 'isOn': false},
+    {'name': 'Dunkin\'', 'isOn': false},
+    {'name': 'Starbucks', 'isOn': false},
+    {'name': 'Tim Hortons', 'isOn': false},
+    {'name': 'Panera Bread', 'isOn': false},
+    {'name': 'Dairy Queen', 'isOn': false},
+    {'name': 'Sonic Drive-In', 'isOn': false},
+    {'name': 'Arby\'s', 'isOn': false},
+    {'name': 'Jack in the Box', 'isOn': false},
+    {'name': 'Carl\'s Jr.', 'isOn': false},
+    {'name': 'Hardee\'s', 'isOn': false},
+    {'name': 'In-N-Out Burger', 'isOn': false},
+    {'name': 'Five Guys', 'isOn': false},
+    {'name': 'Whataburger', 'isOn': false},
+    {'name': 'White Castle', 'isOn': false},
+    {'name': 'Culver\'s', 'isOn': false},
+    {'name': 'Steak \'n Shake', 'isOn': false},
+    {'name': 'Shake Shack', 'isOn': false},
+    {'name': 'Wawa', 'isOn': false},
+    {'name': 'Sheetz', 'isOn': false},
+    {'name': 'QuikTrip', 'isOn': false},
+    {'name': 'RaceTrac', 'isOn': false},
+    {'name': '7-Eleven', 'isOn': false},
+    {'name': 'Circle K', 'isOn': false},
+    {'name': 'Shell', 'isOn': false},
+    {'name': 'Chevron', 'isOn': false},
+    // Add more apps if necessary
+  ];
+
+  void _toggleButton(int index) {
+    setState(() {
+      _apps[index]['isOn'] = !_apps[index]['isOn'];
+    });
+    _showToggleDialog(_apps[index]['name'], _apps[index]['isOn']);
+  }
+
+  void _showToggleDialog(String appName, bool isOn) {
+    String message = isOn
+        ? "$appName's permission to data is successfully turned on"
+        : "$appName's permission to data is successfully turned off";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Permission Status'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: _apps.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(_apps[index]['name']),
+          trailing: TextButton(
+            onPressed: () {
+              _toggleButton(index);
+            },
+            child: Text(
+              _apps[index]['isOn'] ? 'ON' : 'OFF',
+              style: TextStyle(
+                color: _apps[index]['isOn'] ? Colors.green : Colors.red,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+class OptimizePage extends StatefulWidget {
+  @override
+  _OptimizePageState createState() => _OptimizePageState();
+}
+
+class _OptimizePageState extends State<OptimizePage> {
+  static const platform = MethodChannel('app.battery/energy');
+  Map<String, double> _batteryStats = {};
+  bool _loading = true; // Added loading state
+
+  // Fetch battery usage data from Android
+  Future<void> _getBatteryStats() async {
+    try {
+      final Map<dynamic, dynamic> result = await platform.invokeMethod('getBatteryStats');
+      setState(() {
+        _batteryStats = Map<String, double>.from(result);
+        _loading = false; // Stop loading when data is received
+      });
+    } on PlatformException catch (e) {
+      print("Failed to get battery stats: '${e.message}'.");
+      setState(() {
+        _batteryStats = {}; // Reset battery stats in case of error
+        _loading = false; // Stop loading even if there is an error
+      });
+    } catch (e) {
+      // Catch any other errors
+      print("An unknown error occurred: $e");
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getBatteryStats();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Optimize Energy Usage'),
+        backgroundColor: Colors.green,
+      ),
+      body: _loading
+          ? Center(child: CircularProgressIndicator()) // Show loader while fetching data
+          : _batteryStats.isEmpty
+              ? Center(
+                  child: Text('No battery usage data available'),
+                ) // Display a message if no data is found
+              : ListView.builder(
+                  itemCount: _batteryStats.length,
+                  itemBuilder: (context, index) {
+                    String appName = _batteryStats.keys.elementAt(index);
+                    double energyConsumed = _batteryStats[appName] ?? 0.0;
+
+                    // Format the app name if it contains package names
+                    String formattedAppName = appName.split('.').last.capitalize();
+
+                    return ListTile(
+                      title: Text(formattedAppName),
+                      trailing: Text('${energyConsumed.toStringAsFixed(2)} mAh'),
+                    );
+                  },
+                ),
+    );
+  }
+}
+
+// Extension method to capitalize the first letter of a string
+extension StringCasingExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }
