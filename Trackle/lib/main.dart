@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:overlay_support/overlay_support.dart'; // Import overlay support
 import 'home.dart'; // Import home.dart
+import 'overlay_widget.dart'; // Import the new overlay widget
 
 void main() {
   runApp(const MyApp());
@@ -11,14 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Trackle',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 51, 96, 101)),
-        useMaterial3: true,
+    return OverlaySupport(
+      child: MaterialApp(
+        title: 'Trackle',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 51, 96, 101)),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -30,14 +34,22 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   double _opacity = 1.0; // Initial opacity for the logo
   bool _logoVisible = true; // Whether the logo is visible or not
+  OverlaySupportEntry? _overlayEntry; // For handling overlay removal
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _startLogoFadeTimer();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   // Starts the timer to fade the logo and redirect
@@ -63,6 +75,24 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     });
+  }
+
+  // Detect if app goes to background or comes to foreground
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // App in background - show the overlay with buttons
+      _overlayEntry = showOverlay(
+        (context, t) {
+          return OverlayWidget();
+        },
+        duration: Duration.zero, // Keep it visible indefinitely
+      );
+    } else if (state == AppLifecycleState.resumed) {
+      // App in foreground - remove the overlay
+      _overlayEntry?.dismiss(); // Remove the overlay
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
