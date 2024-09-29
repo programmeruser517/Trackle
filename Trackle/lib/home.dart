@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // for encoding the query as JSON
-
-import 'package:flutter/services.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -70,7 +69,7 @@ class _AIPromptPageState extends State<AIPromptPage> {
   final TextEditingController _controller = TextEditingController();
   String _response = 'Response will generate here.';
   String apiKey =
-      'sk-TE-v0368KVMrj1Ind1xuYIXmHBUNW4i5ZgLo5XhuxLT3BlbkFJyuFDfmI-TA5e-uCT3blwcrZISJVDHQcRMH39Xy09oA';
+      'sk-6d17CHKVpPzd2rNyIvyvb-fPez0xP74Z8Jml67t83lT3BlbkFJnZmXlqsvcAR2_rcb-SgJlIikO-vmFT5qVo3dB__EUA';
 
   // This function sends a query to the API and fetches the response
   Future<void> _sendQuery(String query) async {
@@ -403,7 +402,6 @@ class _ControlPageState extends State<ControlPage> {
   }
 }
 
-
 class OptimizePage extends StatefulWidget {
   @override
   _OptimizePageState createState() => _OptimizePageState();
@@ -412,7 +410,8 @@ class OptimizePage extends StatefulWidget {
 class _OptimizePageState extends State<OptimizePage> {
   static const platform = MethodChannel('app.battery/energy');
   Map<String, double> _batteryStats = {};
-  bool _loading = true; // Added loading state
+  bool _loading = true;
+  String _aiResponse = '';
 
   // Fetch battery usage data from Android
   Future<void> _getBatteryStats() async {
@@ -420,19 +419,57 @@ class _OptimizePageState extends State<OptimizePage> {
       final Map<dynamic, dynamic> result = await platform.invokeMethod('getBatteryStats');
       setState(() {
         _batteryStats = Map<String, double>.from(result);
-        _loading = false; // Stop loading when data is received
-      });
-    } on PlatformException catch (e) {
-      print("Failed to get battery stats: '${e.message}'.");
-      setState(() {
-        _batteryStats = {}; // Reset battery stats in case of error
-        _loading = false; // Stop loading even if there is an error
-      });
-    } catch (e) {
-      // Catch any other errors
-      print("An unknown error occurred: $e");
-      setState(() {
         _loading = false;
+      });
+      _queryAI(); // Query AI after getting the battery stats
+    } on PlatformException catch (e) {
+      print("Failed to get battery stats: '${e.message}'");
+      setState(() {
+        _batteryStats = {};
+        _loading = false;
+      });
+    }
+  }
+
+  // Query AI for recommendations based on top 5 apps and energy consumption
+  Future<void> _queryAI() async {
+    final top5Apps = _batteryStats.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value)); // Sort by energy consumption
+    final top5 = top5Apps.take(5).map((e) => '${e.key}: ${e.value.toStringAsFixed(2)} mAh').join(", ");
+    final String apiKey = 'sk-6d17CHKVpPzd2rNyIvyvb-fPez0xP74Z8Jml67t83lT3BlbkFJnZmXlqsvcAR2_rcb-SgJlIikO-vmFT5qVo3dB__EUA';
+    final String query = 'The following apps consumed the most battery in the past 24 hours: $top5. Recommend two apps to revoke permissions from.';
+
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: jsonEncode({
+          "model": "gpt-3.5-turbo",
+          "messages": [
+            {"role": "system", "content": "You are an AI assistant."},
+            {"role": "user", "content": query}
+          ],
+          "max_tokens": 150,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _aiResponse = jsonDecode(response.body)['choices'][0]['message']['content'];
+        });
+      } else {
+        setState(() {
+          _aiResponse = 'Error: Unable to communicate with AI (Code: ${response.statusCode})';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _aiResponse = 'Error: Unable to reach the AI.';
       });
     }
   }
@@ -451,26 +488,41 @@ class _OptimizePageState extends State<OptimizePage> {
         backgroundColor: Colors.green,
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator()) // Show loader while fetching data
-          : _batteryStats.isEmpty
-              ? Center(
-                  child: Text('No battery usage data available'),
-                ) // Display a message if no data is found
-              : ListView.builder(
-                  itemCount: _batteryStats.length,
-                  itemBuilder: (context, index) {
-                    String appName = _batteryStats.keys.elementAt(index);
-                    double energyConsumed = _batteryStats[appName] ?? 0.0;
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                _batteryStats.isEmpty
+                    ? Center(child: Text('No battery usage data available'))
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: _batteryStats.length,
+                          itemBuilder: (context, index) {
+                            String appName = _batteryStats.keys.elementAt(index);
+                            double energyConsumed = _batteryStats[appName] ?? 0.0;
 
-                    // Format the app name if it contains package names
-                    String formattedAppName = appName.split('.').last.capitalize();
+                            // Format the app name if it contains package names
+                            String formattedAppName = appName.split('.').last.capitalize();
 
-                    return ListTile(
-                      title: Text(formattedAppName),
-                      trailing: Text('${energyConsumed.toStringAsFixed(2)} mAh'),
-                    );
-                  },
-                ),
+                            return ListTile(
+                              title: Text(formattedAppName),
+                              trailing: Text('${energyConsumed.toStringAsFixed(2)} mAh'),
+                            );
+                          },
+                        ),
+                      ),
+                SizedBox(height: 20),
+                _aiResponse.isEmpty
+                    ? CircularProgressIndicator()
+                    : Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'AI Recommendation:\n$_aiResponse',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+              ],
+            ),
     );
   }
 }
