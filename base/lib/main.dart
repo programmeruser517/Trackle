@@ -12,9 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Trackle',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 51, 96, 101)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 51, 96, 101)),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -57,7 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // Redirect to HomePage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to HomePage from home.dart
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(), // Ensure HomeScreen is imported
+        ),
       );
     });
   }
@@ -65,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 51, 96, 101), // Background color changed to light blue
+      backgroundColor: const Color.fromARGB(255, 51, 96, 101), // Background color
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -74,11 +77,11 @@ class _MyHomePageState extends State<MyHomePage> {
             if (_logoVisible)
               AnimatedOpacity(
                 opacity: _opacity,
-                duration: const Duration(seconds: 2), // Duration for the fade-out effect
+                duration: const Duration(seconds: 2), // Fade duration
                 child: Image.asset(
-                  'images/logo_word_motto-curved.png', // Your logo path
-                  width: 300, // Increased the width by a factor of 3
-                  height: 300, // Increased the height by a factor of 3
+                  'images/logo_word_motto-curved.png', // Logo path
+                  width: 300, // Increased width
+                  height: 300, // Increased height
                 ),
               ),
           ],
