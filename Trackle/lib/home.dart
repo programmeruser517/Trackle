@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Image.asset(
           'images/logo_word.png',  // Path to the logo image
-          height: 40,  // Adjust the height as needed
+          height: 40,
         ),
         //centerTitle: true,  // Optionally center the logo
         backgroundColor: const Color.fromARGB(255, 51, 96, 101),
