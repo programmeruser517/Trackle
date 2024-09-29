@@ -55,5 +55,13 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
+
+  // Flutter Configuration Below
+  "dart.flutterSdkPath": "C:/Users/vishe/Desktop/flutter",  // Flutter SDK path
+  "dart.sdkPath": "C:/Users/vishe/Desktop/flutter/bin/cache/dart-sdk",  // Dart SDK path
+  "terminal.integrated.env.windows": {
+    "PATH": "C:/Users/vishe/Desktop/flutter/bin;${env:PATH}"  // Add Flutter to PATH
+  }
+  
 }

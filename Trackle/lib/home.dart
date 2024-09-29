@@ -72,7 +72,7 @@ class _AIPromptPageState extends State<AIPromptPage> {
   final TextEditingController _controller = TextEditingController();
   String _response = 'Response will generate here.';
   String apiKey =
-      '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';
+      'sk-YFJR-OCH9s3rKdxHz07lyK6jIl5cot9xsNNF8wwzCTT3BlbkFJp5DfHpsK7umzWZVrAV5hqvYNmmkpFjRkl0xCoWurEA';
 
   // This function sends a query to the OpenAI GPT API and fetches the response
   Future<void> _sendQuery(String query) async {
@@ -125,131 +125,135 @@ class _AIPromptPageState extends State<AIPromptPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: Colors.grey.shade300,
-                width: 1.5), // Light border around entire area
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              // Instructions Text
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Welcome to Trackle!\n\n', // Bold this part
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold, // Make it bold
-                          fontSize: 14,
-                          color: Colors.grey.shade700,
+      child: SingleChildScrollView(
+        // Enable scrolling
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 1.5), // Light border around entire area
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                // Instructions Text
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Welcome to Trackle!\n\n', // Bold this part
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, // Make it bold
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                          ),
                         ),
+                        TextSpan(
+                          text:
+                              'Try asking me things like:\n\n- How to turn off the microphone for "z"?\n'
+                              '- What are the privacy settings for "y" app?\n'
+                              '- How to disable geolocation for "x" app?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                // Message Input Field
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: 'Message Trackle', // New placeholder text
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 10.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
                       ),
-                      TextSpan(
-                        text:
-                            'Try asking me things like:\n\n- How to turn off the microphone for "z"?\n'
-                            '- What are the privacy settings for "y" app?\n'
-                            '- How to disable geolocation for "x" app?',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade700,
-                        ),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                    ),
+                  ),
+                ),
+                // Send Button
+                ElevatedButton(
+                  onPressed: () {
+                    String query = _controller.text;
+                    if (query.isNotEmpty) {
+                      _sendQuery(query); // Call the AI API
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent
+                        .withOpacity(0.7), // Mellow, less opaque color
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    elevation: 5, // Add elevation for a more modern button look
+                  ),
+                  child: Text(
+                    'Send',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+                SizedBox(height: 20),
+                // AI Response Area
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.0),
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 1.0,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3), // changes position of shadow
                       ),
                     ],
                   ),
-                  textAlign: TextAlign.center,
+                  child: Text(
+                    _response, // AI response
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.black87),
+                  ),
                 ),
-              ),
-              // Message Input Field
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Message Trackle', // New placeholder text
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
+                SizedBox(height: 20),
+                // Footer Text
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Powered by ',
+                      style:
+                          TextStyle(fontSize: 14, color: Colors.grey.shade600),
                     ),
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                  ),
-                ),
-              ),
-              // Send Button
-              ElevatedButton(
-                onPressed: () {
-                  String query = _controller.text;
-                  if (query.isNotEmpty) {
-                    _sendQuery(query); // Call the AI API
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent
-                      .withOpacity(0.7), // Mellow, less opaque color
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  elevation: 5, // Add elevation for a more modern button look
-                ),
-                child: Text(
-                  'Send',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-              SizedBox(height: 20),
-              // AI Response Area
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 1.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
+                    Image.asset(
+                      'images/intel_ai_logo.jpg',
+                      height: 30,
                     ),
                   ],
                 ),
-                child: Text(
-                  _response, // AI response
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
-                ),
-              ),
-              SizedBox(height: 20),
-              // Footer Text
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Powered by ',
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                  ),
-                  Image.asset(
-                    'images/intel_ai_logo.jpg',
-                    height: 30,
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
