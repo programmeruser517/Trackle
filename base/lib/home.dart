@@ -10,10 +10,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Subpages content for each tab
   static const List<Widget> _widgetOptions = <Widget>[
-    Center(child: Text('Home')),
-    Center(child: Text('Switches')),
-    Center(child: Text('Log')),
-    Center(child: Text('Energy')),
+    Center(child: Text('Home')), // home
+    Center(child: Text('Control')), // switches
+    Center(child: Text('Log')), // log
+    Center(child: Text('Optimize')), // energy
   ];
 
   void _onItemTapped(int index) {
