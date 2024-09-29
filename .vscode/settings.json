@@ -62,6 +62,7 @@
   "dart.sdkPath": "C:/Users/vishe/Desktop/flutter/bin/cache/dart-sdk",  // Dart SDK path
   "terminal.integrated.env.windows": {
     "PATH": "C:/Users/vishe/Desktop/flutter/bin;${env:PATH}"  // Add Flutter to PATH
-  }
+  },
+  "java.configuration.updateBuildConfiguration": "interactive"
   
 }

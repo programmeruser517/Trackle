@@ -72,12 +72,12 @@ class _AIPromptPageState extends State<AIPromptPage> {
   final TextEditingController _controller = TextEditingController();
   String _response = 'Response will generate here.';
   String apiKey =
-      'sk-YFJR-OCH9s3rKdxHz07lyK6jIl5cot9xsNNF8wwzCTT3BlbkFJp5DfHpsK7umzWZVrAV5hqvYNmmkpFjRkl0xCoWurEA';
+      'sk-TE-v0368KVMrj1Ind1xuYIXmHBUNW4i5ZgLo5XhuxLT3BlbkFJyuFDfmI-TA5e-uCT3blwcrZISJVDHQcRMH39Xy09oA';
 
-  // This function sends a query to the OpenAI GPT API and fetches the response
+  // This function sends a query to the API and fetches the response
   Future<void> _sendQuery(String query) async {
     const apiUrl =
-        'https://api.openai.com/v1/chat/completions'; // Correct OpenAI API endpoint for gpt-3.5-turbo
+        'https://api.openai.com/v1/chat/completions'; // Correct  API endpoint for gpt-3.5-turbo
     bool retry = true;
     int retries = 0;
     const maxRetries = 3;
