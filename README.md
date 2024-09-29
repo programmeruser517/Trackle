@@ -1,5 +1,5 @@
 # Trackle
-# ![Trackle Logo](base/images/logo_word_motto-curved.png) 
+# ![Trackle Logo](Trackle/images/logo_word_motto-curved.png) 
 
 **Trackle** is a privacy and accessibility-focused app that provides users with control over their device’s privacy settings. Trackle makes it easy to monitor, track, and adjust permissions such as geolocation, microphone access, and system changes in a user-friendly manner. 
 
