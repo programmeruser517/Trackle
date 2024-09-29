@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // Redirect to HomePage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()), // Navigate to HomePage from home.dart
+        MaterialPageRoute(builder: (context) => HomeScreen()), // Navigate to HomePage from home.dart
       );
     });
   }
