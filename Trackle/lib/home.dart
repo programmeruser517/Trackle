@@ -69,7 +69,7 @@ class _AIPromptPageState extends State<AIPromptPage> {
   final TextEditingController _controller = TextEditingController();
   String _response = 'Response will generate here.';
   String apiKey =
-      'sk-6d17CHKVpPzd2rNyIvyvb-fPez0xP74Z8Jml67t83lT3BlbkFJnZmXlqsvcAR2_rcb-SgJlIikO-vmFT5qVo3dB__EUA';
+      'sk-0IyJU1kh54OfSBc5fBetwB_7xC5ePRHJNxkv7ASE1sT3BlbkFJAOjTe-bFcSVNrnte6-raT3meanP_Xvf_EYwauSw8AA';
 
   // This function sends a query to the API and fetches the response
   Future<void> _sendQuery(String query) async {
@@ -436,7 +436,7 @@ class _OptimizePageState extends State<OptimizePage> {
     final top5Apps = _batteryStats.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value)); // Sort by energy consumption
     final top5 = top5Apps.take(5).map((e) => '${e.key}: ${e.value.toStringAsFixed(2)} mAh').join(", ");
-    final String apiKey = 'sk-6d17CHKVpPzd2rNyIvyvb-fPez0xP74Z8Jml67t83lT3BlbkFJnZmXlqsvcAR2_rcb-SgJlIikO-vmFT5qVo3dB__EUA';
+    final String apiKey = 'sk-0IyJU1kh54OfSBc5fBetwB_7xC5ePRHJNxkv7ASE1sT3BlbkFJAOjTe-bFcSVNrnte6-raT3meanP_Xvf_EYwauSw8AA';
     final String query = 'The following apps consumed the most battery in the past 24 hours: $top5. Recommend two apps to revoke permissions from.';
 
     const apiUrl = 'https://api.openai.com/v1/chat/completions';

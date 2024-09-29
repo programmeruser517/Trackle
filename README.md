@@ -18,6 +18,13 @@ The app not only provides an overview of your device's settings but also tracks 
 
 ---
 
+## Media and Screenshots
+
+1. YouTube - [Trackle Demo](https://www.youtube.com/watch?v=MGLW5ijfUm8)
+2. Screenshots - https://file.io/OlB5GRfRJtzO
+
+---
+
 ## Installation
 
 1. Clone the repository:
