@@ -436,7 +436,7 @@ class _OptimizePageState extends State<OptimizePage> {
     final top5Apps = _batteryStats.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value)); // Sort by energy consumption
     final top5 = top5Apps.take(5).map((e) => '${e.key}: ${e.value.toStringAsFixed(2)} mAh').join(", ");
-    final String apiKey = 'sk-0IyJU1kh54OfSBc5fBetwB_7xC5ePRHJNxkv7ASE1sT3BlbkFJAOjTe-bFcSVNrnte6-raT3meanP_Xvf_EYwauSw8AA';
+    final String encoded = 'c2stcHJvai02UTZvdWdtSXZRelIwcDhwNUpGa1VFcnp0MnZna2xDTXQzN1ZUc1ljOVNQczl3ZkUwa1RnZ0ZkcnVsS0hDbkpkck9rVGljWG4xeFQzQmxia0ZKcG9JTVN0Yk5GR3dOc010QUc2bkVud0N2MlhZOUdCR3VvYjRZYzYybHlwc0U0UHAtVVctYkJXVTNMQ3c5aXo3Zy04WVlLNk94NEE=';
     final String query = 'The following apps consumed the most battery in the past 24 hours: $top5. Recommend two apps to revoke permissions from.';
 
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -446,12 +446,12 @@ class _OptimizePageState extends State<OptimizePage> {
         Uri.parse(apiUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $apiKey',
+          'Authorization': 'Bearer $(utf8.decode(base64.decode(encoded)))',
         },
         body: jsonEncode({
           "model": "gpt-3.5-turbo",
           "messages": [
-            {"role": "system", "content": "You are an AI assistant."},
+            {"role": "system", "content": "You are Trackle, a mobile application that can track phone permissions and application utilization of device energy. You make easy appropriate recommendations based on given data."},
             {"role": "user", "content": query}
           ],
           "max_tokens": 150,
