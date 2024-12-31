@@ -31,3 +31,7 @@ The app not only provides an overview of your device's settings but also tracks 
    ```bash
    git clone https://github.com/username/trackle.git
    cd trackle
+
+## License
+
+Trackle (Web) © 2024 by Peter Pena, Xiangbo Cai, Krrish Seth, Vishesh Verma is licensed under CC BY-NC 4.0 - see the LICENSE file for details.
